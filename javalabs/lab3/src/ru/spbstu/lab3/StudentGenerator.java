@@ -1,12 +1,14 @@
 package ru.spbstu.lab3;
 
 import java.util.Queue;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class StudentGenerator extends Thread {
+public class StudentGenerator extends Thread{
     private static final int MAX_SIZE = 10;
     private static final int GENERATING_INTERVAL = 2000; // 2 sec
     private Queue<Student> studentsQueue;
+    private ExecutorService exService;
 
     public StudentGenerator(Queue<Student> studentsQueue)
     {
@@ -19,6 +21,7 @@ public class StudentGenerator extends Thread {
     @Override
     public void run()
     {
+        //exService = Executors.newFixedThreadPool(3);
         while (true) {
             if (studentsQueue.size() < MAX_SIZE) {
 
