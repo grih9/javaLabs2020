@@ -32,8 +32,9 @@ public class Robot extends Thread {
                 try {
                     if (studentsQueue.peek() != null && studentsQueue.peek().getSubjectName().equals(subjectName)) {
                         labsCount = studentsQueue.take().getLabsCount();
-                        sleep(50);
-                        System.out.println("Robot " + subjectName + " STARTED checking labs from a student");
+                        sleep(100);
+                        System.out.println("Robot " + subjectName + " STARTED checking labs from a student.\n"
+                                + studentsQueue.size() + " student(s) in the queue.");
                     }
                 } finally {
                     robotLock.unlock();
@@ -43,7 +44,7 @@ public class Robot extends Thread {
                 labsCount -= 5;
                 if (labsCount == 0) {
                     System.out.println("Robot " + subjectName + " FINISHED checking labs from a student");
-                    sleep(50);
+                    sleep(100);
                 }
             }
         }

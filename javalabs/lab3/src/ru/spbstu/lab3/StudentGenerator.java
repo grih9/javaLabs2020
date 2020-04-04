@@ -1,10 +1,9 @@
 package ru.spbstu.lab3;
 
-
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class StudentGenerator extends Thread {
-    private static final int GENERATING_INTERVAL = 4000; // 4.3 sec
+    private static final int GENERATING_INTERVAL = 4300; // 4.3 sec
 
     private ArrayBlockingQueue<Student> studentsQueue;
 
@@ -55,7 +54,8 @@ public class StudentGenerator extends Thread {
             try {
                 sleep(GENERATING_INTERVAL);
                 studentsQueue.put(new Student(labsCount, subjectName));
-                System.out.println("GENERATED " + labsCount + " labs."+ " Subject is " + subjectName);
+                System.out.println("GENERATED " + labsCount + " labs."+ " Subject is " + subjectName
+                        + "\n" + studentsQueue.size() + " student(s) in the queue.");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
