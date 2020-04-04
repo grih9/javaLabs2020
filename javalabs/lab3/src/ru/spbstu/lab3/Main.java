@@ -1,12 +1,14 @@
 package ru.spbstu.lab3;
 
-import java.util.concurrent.*;
-import java.util.Queue;
+
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
+    private static final int QUEUE_CAPACITY = 10;
+
     public static void main(String[] args) {
-        Queue<Student> studentsQueue = new ConcurrentLinkedQueue<Student>();
+        ArrayBlockingQueue<Student> studentsQueue = new ArrayBlockingQueue<Student>(QUEUE_CAPACITY);
         StudentGenerator studentGenerator = new StudentGenerator(studentsQueue);
 
         Robot robotOOP = new Robot("OOP", studentsQueue);

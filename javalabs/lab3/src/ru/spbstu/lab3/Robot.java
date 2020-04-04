@@ -1,18 +1,17 @@
 package ru.spbstu.lab3;
 
-import java.util.Objects;
-import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Robot extends Thread {
 
     private int labsCount;
     private String subjectName;
-    private Queue<Student> studentsQueue;
-    private static final int checkingTime = 500;  // 0.5 sec
+    private ArrayBlockingQueue<Student> studentsQueue;
+    private static final int checkingTime = 1000;  // 1 sec
     private static ReentrantLock robotLock;
 
-    public Robot(String subject, Queue<Student> queue)
+    public Robot(String subject, ArrayBlockingQueue<Student> queue)
     {
         if (!((subject.equals("OOP")) || (subject.equals("Physics")) || (subject.equals("Math")))) {
             throw new IllegalArgumentException("Illegal subject name");
@@ -26,27 +25,26 @@ public class Robot extends Thread {
         Robot.robotLock = robotLock;
     }
 
-    private void checkLabs() {
+    private void checkLabs() throws InterruptedException{
         while (true) {
-            robotLock.lock();
-            try {
-                if (labsCount <= 0) {
-                    if (!studentsQueue.isEmpty()) {
-                        if (studentsQueue.peek().getSubjectName().equals(subjectName)) {
-                            labsCount = studentsQueue.poll().getLabsCount();
-                        }
+            if (labsCount <= 0) {
+                robotLock.lock();
+                try {
+                    if (studentsQueue.peek() != null && studentsQueue.peek().getSubjectName().equals(subjectName)) {
+                        labsCount = studentsQueue.take().getLabsCount();
+                        sleep(50);
+                        System.out.println("Robot " + subjectName + " STARTED checking labs from a student");
                     }
-                } else {
-                    try {
-                        sleep(checkingTime);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    labsCount -= 5;
-                    System.out.println("Robot " + subjectName + " checked 5 labs." + labsCount + " remaining.");
+                } finally {
+                    robotLock.unlock();
                 }
-            } finally {
-                robotLock.unlock();
+            } else {
+                sleep(checkingTime);
+                labsCount -= 5;
+                if (labsCount == 0) {
+                    System.out.println("Robot " + subjectName + " FINISHED checking labs from a student");
+                    sleep(50);
+                }
             }
         }
     }
@@ -57,6 +55,10 @@ public class Robot extends Thread {
 
     @Override
     public void run() {
-        checkLabs();
+        try {
+            checkLabs();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
