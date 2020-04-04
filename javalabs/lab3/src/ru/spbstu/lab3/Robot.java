@@ -8,8 +8,8 @@ public class Robot extends Thread {
     private int labsCount;
     private String subjectName;
     private ArrayBlockingQueue<Student> studentsQueue;
+    private static ReentrantLock queueLock;
     private static final int checkingTime = 1000;  // 1 sec
-    private static ReentrantLock robotLock;
 
     public Robot(String subject, ArrayBlockingQueue<Student> queue)
     {
@@ -21,30 +21,28 @@ public class Robot extends Thread {
         this.studentsQueue = queue;
     }
 
-    public static void setRobotLock(ReentrantLock robotLock) {
-        Robot.robotLock = robotLock;
+    public static void setQueueLock(ReentrantLock queueLock) {
+        Robot.queueLock = queueLock;
     }
 
     private void checkLabs() throws InterruptedException{
         while (true) {
             if (labsCount <= 0) {
-                robotLock.lock();
+                queueLock.lock();
                 try {
                     if (studentsQueue.peek() != null && studentsQueue.peek().getSubjectName().equals(subjectName)) {
                         labsCount = studentsQueue.take().getLabsCount();
-                        sleep(100);
                         System.out.println("Robot " + subjectName + " STARTED checking labs from a student.\n"
                                 + studentsQueue.size() + " student(s) in the queue.");
                     }
                 } finally {
-                    robotLock.unlock();
+                    queueLock.unlock();
                 }
             } else {
                 sleep(checkingTime);
                 labsCount -= 5;
                 if (labsCount == 0) {
                     System.out.println("Robot " + subjectName + " FINISHED checking labs from a student");
-                    sleep(100);
                 }
             }
         }

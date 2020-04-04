@@ -20,7 +20,8 @@ public class Main {
         robotMath.setName("Robot Math");
 
         ReentrantLock myLock = new ReentrantLock();
-        Robot.setRobotLock(myLock);
+        Robot.setQueueLock(myLock);
+        StudentGenerator.setQueueLock(myLock);
 
         studentGenerator.start();
 
