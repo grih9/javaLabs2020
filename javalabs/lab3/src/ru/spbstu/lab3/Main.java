@@ -30,6 +30,5 @@ public class Main {
         robotPhysics.start();
 
         studentGenerator.start();
-
     }
 }
