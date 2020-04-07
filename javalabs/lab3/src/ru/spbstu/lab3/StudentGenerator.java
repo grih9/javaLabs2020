@@ -1,27 +1,35 @@
 package ru.spbstu.lab3;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class StudentGenerator extends Thread {
     private static final int GENERATING_INTERVAL = 300;
 
     private BlockingQueue<Student> studentsQueue;
-    private static ReentrantLock queueLock;
+    private ReentrantLock queueLock;
+    private Condition queueCond;
 
     public StudentGenerator(BlockingQueue<Student> studentsQueue) {
         if (studentsQueue == null) {
             throw new IllegalArgumentException("Queue is null!");
         }
         this.studentsQueue = studentsQueue;
+        queueLock = null;
+        queueCond = null;
     }
 
-    public static void setQueueLock(ReentrantLock queueLock) {
-        StudentGenerator.queueLock = queueLock;
+    public StudentGenerator(BlockingQueue<Student> studentsQueue, ReentrantLock lock, Condition condition) {
+        if (studentsQueue == null) {
+            throw new IllegalArgumentException("Queue is null!");
+        }
+        this.studentsQueue = studentsQueue;
+        queueLock = lock;
+        queueCond = condition;
     }
 
-    @Override
-    public void run() {
+    private void generateNewStudent() {
         while (true) {
             int labsCount = (int) (Math.random() * 3) + 1;
             int subjectNameNum = (int) (Math.random() * 3) + 1;
@@ -56,16 +64,32 @@ public class StudentGenerator extends Thread {
                     break;
                 }
             }
-
             try {
                 sleep(GENERATING_INTERVAL);
-                studentsQueue.put(new Student(labsCount, subjectName));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("GENERATED " + labsCount + " labs." + " Subject is " + subjectName
+            queueLock.lock();
+            try {
+                while (studentsQueue.remainingCapacity() == 0) {
+                    queueCond.await();
+                }
+                studentsQueue.add(new Student(labsCount, subjectName));
+                System.out.println("GENERATED " + labsCount + " labs." + " Subject is " + subjectName
                         + "\n" + studentsQueue.size() + " student(s) in the queue.");
+//                queueCond.signalAll();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                queueLock.unlock();
+            }
         }
+    }
+
+
+    @Override
+    public void run() {
+        generateNewStudent();
     }
 
 }
