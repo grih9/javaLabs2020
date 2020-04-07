@@ -1,28 +1,36 @@
 package ru.spbstu.lab3;
 
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Robot extends Thread {
 
     private int labsCount;
-    private String subjectName;
-    private ArrayBlockingQueue<Student> studentsQueue;
-    private static ReentrantLock queueLock;
-    private static final int checkingTime = 1000;  // 1 sec
+    private Subjects subject;
+    private BlockingQueue<Student> studentsQueue;
+    private ReentrantLock queueLock;
+    private static final int checkingTime = 100;
 
-    public Robot(String subject, ArrayBlockingQueue<Student> queue)
+    public Robot(Subjects subject, BlockingQueue<Student> queue)
     {
-        if (!((subject.equals("OOP")) || (subject.equals("Physics")) || (subject.equals("Math")))) {
+        if ((subject != Subjects.OOP) && (subject != Subjects.Physics) && (subject != Subjects.Math)) {
             throw new IllegalArgumentException("Illegal subject name");
         }
 
-        subjectName = subject;
-        this.studentsQueue = queue;
+        this.subject = subject;
+        studentsQueue = queue;
+        queueLock = null;
     }
 
-    public static void setQueueLock(ReentrantLock queueLock) {
-        Robot.queueLock = queueLock;
+    public Robot(Subjects subject, BlockingQueue<Student> queue, ReentrantLock queueLock)
+    {
+        if ((subject != Subjects.OOP) && (subject != Subjects.Physics) && (subject != Subjects.Math)) {
+            throw new IllegalArgumentException("Illegal subject name");
+        }
+
+        this.subject = subject;
+        studentsQueue = queue;
+        this.queueLock = queueLock;
     }
 
     private void checkLabs() throws InterruptedException{
@@ -30,9 +38,9 @@ public class Robot extends Thread {
             if (labsCount <= 0) {
                 queueLock.lock();
                 try {
-                    if (studentsQueue.peek() != null && studentsQueue.peek().getSubjectName().equals(subjectName)) {
+                    if (!studentsQueue.isEmpty() && studentsQueue.peek().getSubject() == subject) {
                         labsCount = studentsQueue.take().getLabsCount();
-                        System.out.println("Robot " + subjectName + " STARTED checking labs from a student.\n"
+                        System.out.println("Robot " + subject + " STARTED checking labs from a student.\n"
                                 + studentsQueue.size() + " student(s) in the queue.");
                     }
                 } finally {
@@ -42,14 +50,14 @@ public class Robot extends Thread {
                 sleep(checkingTime);
                 labsCount -= 5;
                 if (labsCount == 0) {
-                    System.out.println("Robot " + subjectName + " FINISHED checking labs from a student");
+                    System.out.println("Robot " + subject + " FINISHED checking labs from a student");
                 }
             }
         }
     }
 
-    public String getSubjectName() {
-        return subjectName;
+    public Subjects getSubject() {
+        return subject;
     }
 
     @Override
