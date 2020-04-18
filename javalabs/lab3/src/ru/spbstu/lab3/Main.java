@@ -1,8 +1,8 @@
 package ru.spbstu.lab3;
 
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -10,7 +10,7 @@ public class Main {
     private static final int QUEUE_CAPACITY = 10;
 
     public static void main(String[] args) {
-        BlockingQueue<Student> studentsQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+        Queue<Student> studentsQueue = new ConcurrentLinkedQueue<>();
 
         ReentrantLock myLock = new ReentrantLock();
         Condition isFull = myLock.newCondition();

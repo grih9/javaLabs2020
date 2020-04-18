@@ -5,17 +5,17 @@ public class Student
     private int labsCount;
     private Subjects subject;
 
-    public Student(int labs, Subjects subject)
+    public Student(int labsCount, Subjects subject)
     {
-        if (!((labs == 10) || (labs == 20) || (labs  == 100))) {
-            throw new IllegalArgumentException("Illegal labsCount number" + labs);
+        if ((labsCount != 10) && (labsCount != 20) && (labsCount  != 100)) {
+            throw new IllegalArgumentException("Illegal labsCount number - " + labsCount);
         }
 
         if ((subject != Subjects.OOP) && (subject != Subjects.Physics) && (subject != Subjects.Math)) {
             throw new IllegalArgumentException("Illegal subject name");
         }
 
-        labsCount = labs;
+        this.labsCount = labsCount;
         this.subject = subject;
     }
 

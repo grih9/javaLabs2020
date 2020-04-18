@@ -1,29 +1,25 @@
 package ru.spbstu.lab3;
 
-import java.util.concurrent.BlockingQueue;
+import java.util.Queue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class StudentGenerator extends Thread {
     private static final int GENERATING_INTERVAL = 300;
 
-    private BlockingQueue<Student> studentsQueue;
+    private Queue<Student> studentsQueue;
     private ReentrantLock queueLock;
     private Condition queueCond;
 
-    public StudentGenerator(BlockingQueue<Student> studentsQueue) {
-        if (studentsQueue == null) {
-            throw new IllegalArgumentException("Queue is null!");
-        }
-        this.studentsQueue = studentsQueue;
-        queueLock = null;
-        queueCond = null;
+    public StudentGenerator(Queue<Student> studentsQueue) {
+        this(studentsQueue, null, null);
     }
 
-    public StudentGenerator(BlockingQueue<Student> studentsQueue, ReentrantLock lock, Condition condition) {
+    public StudentGenerator(Queue<Student> studentsQueue, ReentrantLock lock, Condition condition) {
         if (studentsQueue == null) {
             throw new IllegalArgumentException("Queue is null!");
         }
+
         this.studentsQueue = studentsQueue;
         queueLock = lock;
         queueCond = condition;
@@ -64,20 +60,24 @@ public class StudentGenerator extends Thread {
                     break;
                 }
             }
+
             try {
                 sleep(GENERATING_INTERVAL);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
             queueLock.lock();
             try {
-                while (studentsQueue.remainingCapacity() == 0) {
+
+                while (studentsQueue.size() == 10) {
                     queueCond.await();
                 }
+
                 studentsQueue.add(new Student(labsCount, subjectName));
                 System.out.println("GENERATED " + labsCount + " labs." + " Subject is " + subjectName
                         + "\n" + studentsQueue.size() + " student(s) in the queue.");
-//                queueCond.signalAll();
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } finally {
