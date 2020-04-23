@@ -5,8 +5,6 @@ import ru.spbstu.lab4.model.Product;
 import java.sql.*;
 
 public class ProductDB {
-    private final String TABLE_NAME = "product";
-
     private final Connection connection;
 
     public ProductDB(Connection connection) {
@@ -14,6 +12,7 @@ public class ProductDB {
 
         try {
             if (!tableExists()) {
+                deleteTable();
                 createTable();
             } else {
                 deleteTable();
@@ -25,21 +24,19 @@ public class ProductDB {
     }
 
     public void add(Product product) {
-        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO " + TABLE_NAME + " VALUES (?, ?, ?)")) {
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO product VALUES (?, ?, ?)")) {
             statement.setString(1, product.getProdId());
             statement.setString(2, product.getTitle());
             statement.setDouble(3, product.getCost());
 
-            if (!statement.execute()) {
-                throw new SQLException();
-            }
+            statement.execute();
         } catch (SQLException e) {
             throw new RuntimeException("SQL ошибка! Не удалось добавить товар", e);
         }
     }
 
     public void removeByTitle(String title) {
-        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE title = ?")) {
+        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM product WHERE title = ?")) {
             statement.setString(1, title);
 
             if (statement.executeUpdate() == 0) {
@@ -52,7 +49,7 @@ public class ProductDB {
 
     public ResultSet getTable() {
         try (Statement statement = connection.createStatement()) {
-            ResultSet res = statement.executeQuery("SELECT * FROM " + TABLE_NAME);
+            ResultSet res = statement.executeQuery("SELECT * FROM product");
             while (res.next()) {
                 int id = res.getInt("id");
                 String prodid = res.getString("prodid");
@@ -69,7 +66,7 @@ public class ProductDB {
     }
 
     public ResultSet getFilteredTable(double from, double to) {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE cost >= ? and cost <= ?")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM product WHERE cost >= ? and cost <= ?")) {
             statement.setDouble(1, from);
             statement.setDouble(2, to);
             ResultSet rs = statement.executeQuery();
@@ -82,7 +79,7 @@ public class ProductDB {
     }
 
     public void changeCost(String title, double cost) {
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE " + TABLE_NAME + " SET cost = ? WHERE title = ?")) {
+        try (PreparedStatement statement = connection.prepareStatement("UPDATE product SET cost = ? WHERE title = ?")) {
             statement.setString(2, title);
             statement.setDouble(1, cost);
             if (statement.executeUpdate() == 0) {
@@ -94,7 +91,7 @@ public class ProductDB {
     }
 
     public double getCost(String title) {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT cost FROM " + TABLE_NAME + " WHERE title = ?")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT cost FROM product WHERE title = ?")) {
             statement.setString(1, title);
             ResultSet rs = statement.executeQuery();
             rs.next();
@@ -108,9 +105,9 @@ public class ProductDB {
 
     private boolean tableExists() throws SQLException {
         DatabaseMetaData meta = connection.getMetaData();
-        ResultSet res = meta.getTables(null, null, TABLE_NAME, new String[]{"TABLE"});
+        ResultSet res = meta.getTables(null, null, "product", new String[]{"TABLE"});
         while (res.next()) {
-            if (res.getString("TABLE_NAME").equals(TABLE_NAME)) {
+            if (res.getString("TABLE_NAME").equals("product")) {
                 return true;
             }
         }
@@ -120,13 +117,12 @@ public class ProductDB {
 
     private void createTable() {
         try (Statement statement = connection.createStatement()) {
-            if (!statement.execute("CREATE TABLE " + TABLE_NAME +
-                    "(id INT NOT NULL PRIMARY KEY AUTO_INCREMENT," +
+           statement.execute("CREATE TABLE product(" +
+                    "id INT NOT NULL PRIMARY KEY AUTO_INCREMENT," +
                     "prodid VARCHAR(50)," +
                     "title VARCHAR(100)," +
-                    "cost FLOAT NOT NULL);")) {
-                throw new SQLException();
-            }
+                    "cost INT NOT NULL);");
+
         } catch (SQLException e) {
             throw new RuntimeException("SQL ошибка! Не удалось создать таблицу", e);
         }
@@ -134,9 +130,7 @@ public class ProductDB {
 
     public void deleteTable() {
         try (Statement statement = connection.createStatement()) {
-            if(!statement.execute("DROP TABLE " + TABLE_NAME)) {
-                throw new SQLException();
-            }
+            statement.execute("DROP TABLE product");
         } catch (SQLException e) {
             throw new RuntimeException("SQL ошибка! Не удалось удалить таблицу", e);
         }
