@@ -86,7 +86,6 @@ public class StudentGenerator extends Thread {
         }
     }
 
-
     @Override
     public void run() {
         generateNewStudent();
