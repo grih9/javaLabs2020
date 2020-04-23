@@ -2,9 +2,7 @@ package ru.spbstu.lab4;
 
 import ru.spbstu.lab4.service.DBService;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Warehouse {
     public static final String DB_DIR = "c:/javalabs/lab4/db/";
@@ -28,6 +26,14 @@ public class Warehouse {
             System.out.println("Соединяемся с БД...");
             Connection connection = getConnection();
             DBService dbService = new DBService(System.in, System.out, connection);
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM products");
+            while (rs.next()) {
+                System.out.println((rs.getInt("id") + " : " +
+                        rs.getString("prodid") + " : " +
+                        rs.getString("title") + " : " +
+                        rs.getDouble("cost") + " : "));
+            }
             connection.close();
             System.out.println("Отключение от СУБД выполнено.");
         } catch (ClassNotFoundException e) {
