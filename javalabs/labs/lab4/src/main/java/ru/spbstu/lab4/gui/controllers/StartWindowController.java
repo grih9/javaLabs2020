@@ -5,9 +5,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import ru.spbstu.lab4.gui.GUIMain;
 
+import java.sql.Connection;
+
 public class StartWindowController {
 
     private GUIMain gui;
+    private Connection connection;
 
     @FXML
     private TextField numGenerate;
@@ -25,5 +28,9 @@ public class StartWindowController {
 
     public void setGUI(GUIMain gui) {
         this.gui = gui;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
     }
 }

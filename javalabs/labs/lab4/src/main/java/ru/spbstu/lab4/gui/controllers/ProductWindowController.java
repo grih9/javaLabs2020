@@ -73,6 +73,6 @@ public class ProductWindowController {
 
     @FXML
     private void clickOnButtonEvent(ActionEvent actionEvent) {
-        
+
     }
 }

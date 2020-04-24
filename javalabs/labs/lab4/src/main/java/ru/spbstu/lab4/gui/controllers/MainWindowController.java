@@ -46,7 +46,7 @@ public class MainWindowController {
 
     @FXML
     private void find() {
-        Product newProduct = productDB.printCost(product.getTitle());
+        //Product newProduct = productDB.printCost(product.getTitle());
 
     }
 

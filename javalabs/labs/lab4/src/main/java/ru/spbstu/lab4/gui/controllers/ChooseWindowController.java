@@ -11,8 +11,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class ChooseWindowController {
-    private GUIMain gui;
+    @FXML
+    private RadioButton graphic;
+    @FXML
     private RadioButton console;
+    private GUIMain gui;
     private Connection connection;
 
     @FXML
@@ -20,6 +23,7 @@ public class ChooseWindowController {
         if (console.isSelected()) {
            try {
                DBService dbService = new DBService(System.in, System.out, connection);
+               gui.close();
                dbService.start();
                connection.close();
                System.out.println("Отключение от СУБД выполнено.");
@@ -34,6 +38,10 @@ public class ChooseWindowController {
 
     public void setGUI(GUIMain gui) {
         this.gui = gui;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
     }
 
 }

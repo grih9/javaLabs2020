@@ -10,7 +10,6 @@ import ru.spbstu.lab4.gui.controllers.ChooseWindowController;
 import ru.spbstu.lab4.gui.controllers.MainWindowController;
 import ru.spbstu.lab4.gui.controllers.StartWindowController;
 import ru.spbstu.lab4.repository.ProductDB;
-import ru.spbstu.lab4.service.DBService;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -19,9 +18,9 @@ import java.sql.SQLException;
 
 
 public class GUIMain extends Application {
-    Stage window;
-    ProductDB productDB;
-    Connection connection;
+    private Stage window;
+    private ProductDB productDB;
+    private Connection connection;
 
     public static final String DB_DIR = "c:/javalabs/lab4/db/";
     public static final String DB_FILE = "warehouse";
@@ -65,12 +64,13 @@ public class GUIMain extends Application {
 
     public void showChooseWindow() {
         try {
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ChooseWindow.fxml"));
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/ChooseWindow.fxml"));
             window.setScene(new Scene(loader.load()));
             window.setTitle("Выбор режима");
 
             final ChooseWindowController controller = loader.getController();
             controller.setGUI(this);
+            controller.setConnection(connection);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,12 +78,13 @@ public class GUIMain extends Application {
 
     public void showStartWindow() {
         try {
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/StartWindow.fxml"));
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/StartWindow.fxml"));
             window.setScene(new Scene(loader.load()));
             window.setTitle("Начальная генерация");
 
             final StartWindowController controller = loader.getController();
             controller.setGUI(this);
+            controller.setConnection(connection);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -91,7 +92,7 @@ public class GUIMain extends Application {
 
     public void showMainWindow() {
         try {
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainWindow.fxml"));
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainWindow.fxml"));
             window.setScene(new Scene(loader.load()));
             window.setTitle("Продукты");
 
@@ -128,5 +129,9 @@ public class GUIMain extends Application {
 
     public void setProductBD(ProductDB productDB) {
         this.productDB = productDB;
+    }
+
+    public void close() {
+        window.close();
     }
 }
