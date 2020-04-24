@@ -1,21 +1,25 @@
 package ru.spbstu.lab4.gui.controllers;
 
 import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
+import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import ru.spbstu.lab4.gui.GUIMain;
 
 public class StartWindowController {
 
-    GUIMain gui;
-    public TextField numGenerate;
+    private GUIMain gui;
 
-    public void AcceptButtonClicked(ActionEvent actionEvent) {
+    @FXML
+    private TextField numGenerate;
+
+    @FXML
+    private void AcceptButtonClicked(ActionEvent actionEvent) {
         try {
             int number = Integer.parseInt(numGenerate.getText());
-            showOK("Успешно сгенерировано");
+            gui.showOK("Успешно сгенерировано");
+            gui.showMainWindow();
         } catch (NumberFormatException e) {
-            gui.showError("Неверный формат данных. Введите число")
+            gui.showError("Неверный формат данных. Введите число");
         }
     }
 

@@ -1,32 +1,43 @@
 package ru.spbstu.lab4.gui;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import ru.spbstu.lab4.gui.controllers.ChooseWindow;
 import ru.spbstu.lab4.gui.controllers.ChooseWindowController;
+import ru.spbstu.lab4.gui.controllers.MainWindowController;
 import ru.spbstu.lab4.gui.controllers.StartWindowController;
-import ru.spbstu.lab4.model.Product;
 import ru.spbstu.lab4.repository.ProductDB;
+import ru.spbstu.lab4.service.DBService;
 
 import java.io.IOException;
-import java.sql.SQLOutput;
-import java.util.EventListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 
 public class GUIMain extends Application {
     Stage window;
     ProductDB productDB;
+    Connection connection;
+
+    public static final String DB_DIR = "c:/javalabs/lab4/db/";
+    public static final String DB_FILE = "warehouse";
+    public static final String DB_URL = "jdbc:h2:" + DB_DIR + "/" + DB_FILE;
+    public static final String DB_DRIVER = "org.h2.Driver";
+
+    public static Connection getConnection() throws SQLException {
+        Connection connection = DriverManager.getConnection(DB_URL);
+
+        if (connection.isValid(1)) {
+            System.out.println("Соединение с СУБД установлено.");
+        }
+
+        return connection;
+    }
+
 
     public static void main(String[] args) {
         launch(args);
@@ -34,36 +45,25 @@ public class GUIMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        try {
+            Class.forName(DB_DRIVER);
+            System.out.println("Соединяемся с БД...");
+            connection = getConnection();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("JDBC драйвер для СУБД не найден!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Ошибка SQL!");
+        }
+
         window = primaryStage;
         showChooseWindow();
         window.show();
 
-//        Label label1 = new Label("1st scene");
-//        Button button1 = new Button("Start");
-//
-//        button1.setOnAction(c -> window.setScene(scene2));
-//
-//        VBox layout1 = new VBox(20);
-//        layout1.getChildren().addAll(label1, button1);
-//
-//        scene1 = new Scene(layout1, 200, 200);
-//
-//        Label label2 = new Label("2nd scene");
-//        Button button2 = new Button("END");
-//
-//        button2.setOnAction(c -> window.setScene(scene1));
-//
-//        StackPane layout2 = new StackPane();
-//        layout2.getChildren().addAll(label2, button2);
-//
-//        scene2 = new Scene(layout2, 200, 200);
-//
-//        window.setScene(scene1);
-//        window.setTitle("Warehouse");
-//        window.show();
     }
 
-    private void showChooseWindow() {
+    public void showChooseWindow() {
         try {
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ChooseWindow.fxml"));
             window.setScene(new Scene(loader.load()));
@@ -76,7 +76,7 @@ public class GUIMain extends Application {
         }
     }
 
-    private void showStartWindow() {
+    public void showStartWindow() {
         try {
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/StartWindow.fxml"));
             window.setScene(new Scene(loader.load()));
@@ -89,14 +89,15 @@ public class GUIMain extends Application {
         }
     }
 
-    private void showMainWindow() {
+    public void showMainWindow() {
         try {
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainWindow.fxml"));
             window.setScene(new Scene(loader.load()));
-            window.setTitle("Выбор режима");
+            window.setTitle("Продукты");
 
-            final ChooseWindowController controller = loader.getController();
+            final MainWindowController controller = loader.getController();
             controller.setGUI(this);
+            controller.setProductDB(productDB);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -123,5 +124,9 @@ public class GUIMain extends Application {
         alert.initModality(Modality.APPLICATION_MODAL);
 
         alert.showAndWait();
+    }
+
+    public void setProductBD(ProductDB productDB) {
+        this.productDB = productDB;
     }
 }

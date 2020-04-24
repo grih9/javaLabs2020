@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="234.0" prefWidth="474.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.spbstu.lab4.gui.controllers.ChooseWindow">
+<AnchorPane prefHeight="234.0" prefWidth="474.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.spbstu.lab4.gui.controllers.ChooseWindowController">
     <fx:define>
         <ToggleGroup fx:id="toggleGroup" />
     </fx:define>
