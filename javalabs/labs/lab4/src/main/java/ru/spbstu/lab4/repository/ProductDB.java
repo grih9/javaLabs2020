@@ -9,18 +9,8 @@ public class ProductDB {
 
     public ProductDB(Connection connection) {
         this.connection = connection;
-
-        try {
-            if (!tableExists()) {
-                deleteTable();
-                createTable();
-            } else {
-                deleteTable();
-                createTable();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Не удалось установить соединение", e);
-        }
+        deleteTable();
+        createTable();
     }
 
     public void add(Product product) {
@@ -47,7 +37,7 @@ public class ProductDB {
         }
     }
 
-    public ResultSet getTable() {
+    public void printTable() {
         try (Statement statement = connection.createStatement()) {
             ResultSet res = statement.executeQuery("SELECT * FROM products");
             while (res.next()) {
@@ -57,24 +47,26 @@ public class ProductDB {
                 double cost = res.getDouble("cost");
                 System.out.println(id + " : " + prodid + " : " + title + " : " + cost);
             }
-            return res;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
 
     }
 
-    public ResultSet getFilteredTable(double from, double to) {
+    public void printFilteredTable(double from, double to) {
         try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM products WHERE cost >= ? and cost <= ?")) {
             statement.setDouble(1, from);
             statement.setDouble(2, to);
             ResultSet rs = statement.executeQuery();
-            rs.next();
-            return rs;
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String prodid = rs.getString("prodid");
+                String title = rs.getString("title");
+                double cost = rs.getDouble("cost");
+                System.out.println(id + " : " + prodid + " : " + title + " : " + cost);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
     }
 
@@ -90,15 +82,14 @@ public class ProductDB {
         }
     }
 
-    public double getCost(String title) {
+    public void printCost(String title) {
         try (PreparedStatement statement = connection.prepareStatement("SELECT cost FROM products WHERE title = ?")) {
             statement.setString(1, title);
             ResultSet rs = statement.executeQuery();
             rs.next();
-            return rs.getDouble("cost");
+            System.out.println("цена : " + rs.getDouble("cost"));
         } catch (SQLException e) {
             System.out.println("Такого товара нет");
-            return 0;
         }
     }
 
@@ -117,11 +108,11 @@ public class ProductDB {
 
     private void createTable() {
         try (Statement statement = connection.createStatement()) {
-           statement.execute("CREATE TABLE products(" +
+           statement.execute("CREATE TABLE IF NOT EXISTS products(" +
                     "id INT NOT NULL PRIMARY KEY AUTO_INCREMENT," +
-                    "prodid VARCHAR(50)," +
-                    "title VARCHAR(100)," +
-                    "cost INT NOT NULL);");
+                    "prodid VARCHAR(50) NOT NULL UNIQUE," +
+                    "title VARCHAR(100) NOT NULL UNIQUE," +
+                    "cost DOUBLE NOT NULL);");
 
         } catch (SQLException e) {
             throw new RuntimeException("SQL ошибка! Не удалось создать таблицу", e);
@@ -130,7 +121,7 @@ public class ProductDB {
 
     public void deleteTable() {
         try (Statement statement = connection.createStatement()) {
-            statement.execute("DROP TABLE products");
+            statement.execute("DROP TABLE IF EXISTS products");
         } catch (SQLException e) {
             throw new RuntimeException("SQL ошибка! Не удалось удалить таблицу", e);
         }

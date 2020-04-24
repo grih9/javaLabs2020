@@ -26,14 +26,7 @@ public class Warehouse {
             System.out.println("Соединяемся с БД...");
             Connection connection = getConnection();
             DBService dbService = new DBService(System.in, System.out, connection);
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM products");
-            while (rs.next()) {
-                System.out.println((rs.getInt("id") + " : " +
-                        rs.getString("prodid") + " : " +
-                        rs.getString("title") + " : " +
-                        rs.getDouble("cost") + " : "));
-            }
+            dbService.start();
             connection.close();
             System.out.println("Отключение от СУБД выполнено.");
         } catch (ClassNotFoundException e) {
