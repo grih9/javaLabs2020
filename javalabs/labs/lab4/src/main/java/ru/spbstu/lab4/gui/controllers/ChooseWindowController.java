@@ -22,8 +22,8 @@ public class ChooseWindowController {
     private void startButtonClicked(ActionEvent actionEvent) {
         if (console.isSelected()) {
            try {
-               DBService dbService = new DBService(System.in, System.out, connection);
                gui.close();
+               DBService dbService = new DBService(System.in, System.out, connection);
                dbService.start();
                connection.close();
                System.out.println("Отключение от СУБД выполнено.");

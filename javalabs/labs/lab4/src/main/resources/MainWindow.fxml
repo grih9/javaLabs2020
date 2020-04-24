@@ -5,27 +5,32 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
-
+<?import javafx.scene.layout.HBox?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="579.0" prefWidth="729.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.spbstu.lab4.gui.controllers.MainWindowController">
    <bottom>
-      <ButtonBar prefHeight="58.0" prefWidth="719.0" BorderPane.alignment="CENTER">
-        <buttons>
-          <Button fx:id="add" minWidth="64.0" mnemonicParsing="false" onAction="#add" prefHeight="26.0" prefWidth="198.0" text="ДОБАВИТЬ" />
-            <Button fx:id="edit" mnemonicParsing="false" onAction="#edit" prefHeight="26.0" text="ИЗМЕНИТЬ" />
-            <Button fx:id="delete" mnemonicParsing="false" onAction="#delete" text="УДАЛИТЬ" />
-            <Button fx:id="find" mnemonicParsing="false" onAction="#find" text="НАЙТИ" />
-            <Button fx:id="filter" mnemonicParsing="false" onAction="#filter" prefHeight="26.0" text="ОТФИЛЬТРОВАТЬ" />
-        </buttons>
-      </ButtonBar>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <ButtonBar prefHeight="51.0" prefWidth="704.0">
+              <buttons>
+                <Button fx:id="add" minWidth="64.0" mnemonicParsing="false" onAction="#add" prefHeight="26.0" prefWidth="126.0" text="ДОБАВИТЬ" />
+                  <Button fx:id="edit" mnemonicParsing="false" onAction="#edit" prefHeight="26.0" text="ИЗМЕНИТЬ" />
+                  <Button fx:id="delete" mnemonicParsing="false" onAction="#delete" text="УДАЛИТЬ" />
+                  <Button fx:id="find" mnemonicParsing="false" onAction="#find" text="НАЙТИ" />
+                  <Button fx:id="filter" mnemonicParsing="false" onAction="#filter" prefHeight="26.0" text="ФИЛЬТР" textAlignment="CENTER" />
+                  <Button fx:id="showAll" mnemonicParsing="false" prefHeight="26.0" text="ПОКАЗАТЬ ВСЕ" />
+              </buttons>
+            </ButtonBar>
+         </children>
+      </HBox>
    </bottom>
    <top>
       <TableView fx:id="productTable" prefHeight="528.0" prefWidth="730.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="id" prefWidth="75.0" text="ID" />
-          <TableColumn fx:id="prodid" prefWidth="263.99998474121094" text="PRODID" />
-            <TableColumn fx:id="title" prefWidth="295.20001220703125" text="TITLE" />
-            <TableColumn fx:id="price" minWidth="0.0" prefWidth="93.60000000000002" text="COST" />
+          <TableColumn fx:id="id" editable="false" prefWidth="75.0" resizable="false" text="ID" />
+          <TableColumn fx:id="prodid" editable="false" prefWidth="263.99998474121094" resizable="false" text="PRODID" />
+            <TableColumn fx:id="title" editable="false" prefWidth="295.20001220703125" resizable="false" text="TITLE" />
+            <TableColumn fx:id="price" editable="false" minWidth="0.0" prefWidth="93.60000000000002" resizable="false" text="COST" />
         </columns>
       </TableView>
    </top>

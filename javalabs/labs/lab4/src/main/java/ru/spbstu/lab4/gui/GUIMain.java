@@ -106,12 +106,12 @@ public class GUIMain extends Application {
 
 
     public void showOK(String message) {
-        final Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        final Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("OK");
         alert.initOwner(window);
         alert.setHeaderText("Выполнено успешно");
         alert.setContentText(message);
-        alert.initModality(Modality.WINDOW_MODAL);
+        alert.initModality(Modality.APPLICATION_MODAL);
 
         alert.showAndWait();
     }
