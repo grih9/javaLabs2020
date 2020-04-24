@@ -1,14 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ru.spbstu.lab4.gui.controllers.ProductWindowController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="427.0" prefWidth="260.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.spbstu.lab4.gui.controllers.ProductWindowController">
+    <TextArea layoutX="32.0" layoutY="62.0" prefHeight="331.0" prefWidth="200.0" />
+    <TextField fx:id="titleText" layoutX="58.0" layoutY="98.0" promptText="товар" />
+    <TextField fx:id="priceText" layoutX="58.0" layoutY="162.0" promptText="0.0" />
+    <Label fx:id="priceLabel" layoutX="117.0" layoutY="135.0" text="price">
+        <font>
+          <Font size="14.0" />
+        </font>
+    </Label>
+    <Label fx:id="titleLabel" layoutX="121.0" layoutY="78.0" text="title">
+        <font>
+          <Font size="14.0" />
+        </font>
+    </Label>
+    <Button layoutX="38.0" layoutY="338.0" mnemonicParsing="false" onAction="#clickOnButtonEvent" prefHeight="46.0" prefWidth="189.0" text="ПОДТВЕРДИТЬ">
+        <font>
+          <Font size="18.0" />
+        </font>
+    </Button>
+    <Label fx:id="typeOperLabel" layoutX="21.0" layoutY="21.0" text="ВЗАИМОДЕЙСТВИЕ С ТОВАРОМ">
+        <font>
+          <Font size="15.0" />
+        </font>
+    </Label>
+    <TextField fx:id="fromText" visible="false" layoutX="58.0" layoutY="225.0" promptText="0.0" />
+    <Label fx:id="fromLabel" visible="false" layoutX="98.0" layoutY="194.0" text="price from">
+        <font>
+          <Font size="14.0" />
+        </font>
+    </Label>
+    <TextField fx:id="toText" visible="false" layoutX="56.0" layoutY="287.0" promptText="0.0" />
+    <Label fx:id="toLabel" visible="false" layoutX="106.0" layoutY="259.0" text="price to">
+        <font>
+          <Font size="14.0" />
+        </font>
+    </Label>
 </AnchorPane>
