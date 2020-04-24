@@ -19,12 +19,12 @@ public class DBService {
     private final PrintStream out;
     private Connection connection;
     private final Map<String, Consumer<Scanner>> functions = Map.of(
-            "/add", DBService.this::add,
-            "/delete", DBService.this::delete,
-            "/show_all", DBService.this::showAll,
-            "/price", DBService.this::price,
-            "/change_price", DBService.this::changePrice,
-            "/filter_by_price", DBService.this::filterByPrice
+            "/add", this::add,
+            "/delete", this::delete,
+            "/show_all", this::showAll,
+            "/price", this::price,
+            "/change_price", this::changePrice,
+            "/filter_by_price", this::filterByPrice
     );
 
     public DBService() {
@@ -65,7 +65,7 @@ public class DBService {
         final Scanner line = new Scanner(commandLine);
 
         if (line.hasNext()) {
-            functions.getOrDefault(line.next(), (c) -> out.println("Такой команды нет.")).accept(line);
+            functions.getOrDefault(line.next(), (v) -> out.println("Такой команды нет.")).accept(line);
         }
     }
 
@@ -73,6 +73,9 @@ public class DBService {
         try {
             final String title = args.next();
             final int cost = args.nextInt();
+            if (args.hasNext()) {
+                throw new RuntimeException("Неверное число аргументов.");
+            }
             productDB.add(new Product(0, UUID.randomUUID().toString(), title, cost));
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Неверная команда.");
@@ -82,6 +85,9 @@ public class DBService {
     private void delete(Scanner args) {
         try {
             final String title = args.next();
+            if (args.hasNext()) {
+                throw new RuntimeException("Неверное число аргументов.");
+            }
             productDB.removeByTitle(title);
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Неверная команда.");
@@ -90,7 +96,9 @@ public class DBService {
 
     private void showAll(Scanner args) {
         try {
-            Connection connection = null;
+            if (args.hasNext()) {
+                throw new RuntimeException("Неверное число аргументов.");
+            }
             productDB.printTable();
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Неверная команда.");
@@ -100,6 +108,9 @@ public class DBService {
     private void price(Scanner args) {
         try {
             final String title = args.next();
+            if (args.hasNext()) {
+                throw new RuntimeException("Неверное число аргументов.");
+            }
             productDB.printCost(title);
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Неверная команда.");
@@ -110,6 +121,9 @@ public class DBService {
         try {
             final String title = args.next();
             final int cost = args.nextInt();
+            if (args.hasNext()) {
+                throw new RuntimeException("Неверное число аргументов.");
+            }
             productDB.changeCost(title, cost);
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Неверная команда.");
@@ -120,6 +134,9 @@ public class DBService {
         try {
             final int from = args.nextInt();
             final int to = args.nextInt();
+            if (args.hasNext()) {
+                throw new RuntimeException("Неверное число аргументов.");
+            }
             productDB.printFilteredTable(from, to);
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Неверная команда.");
