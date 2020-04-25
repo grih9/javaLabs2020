@@ -10,6 +10,7 @@ import ru.spbstu.lab4.gui.GUIMain;
 import ru.spbstu.lab4.gui.Operations;
 import ru.spbstu.lab4.model.Product;
 
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 public class ProductWindowController {
@@ -93,10 +94,12 @@ public class ProductWindowController {
         try {
             String title = "товар";
             if (titleText.isVisible()) {
-                title = titleText.getText().trim();
+                if (!titleText.getText().trim().isEmpty()) {
+                    title = titleText.getText().trim();
 
-                if (title.contains(" ")) {
-                    throw new IllegalArgumentException();
+                    if (title.contains(" ")) {
+                        throw new IllegalArgumentException();
+                    }
                 }
             }
 
@@ -124,7 +127,12 @@ public class ProductWindowController {
             Stage window = (Stage) fromLabel.getScene().getWindow();
             window.close();
         } catch (IllegalArgumentException e) {
-            gui.showError("Неверный ввод данных");
+            gui.showError("Неверный ввод данных.");
+        } catch (NoSuchElementException e) {
+            gui.showError("Товара с таким именем не найдено.");
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            gui.showError("Товар с таким именем уже есть.");
         }
     }
 }

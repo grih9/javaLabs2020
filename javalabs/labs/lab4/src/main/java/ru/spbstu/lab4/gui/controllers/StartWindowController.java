@@ -7,7 +7,6 @@ import ru.spbstu.lab4.gui.GUIMain;
 import ru.spbstu.lab4.model.Product;
 import ru.spbstu.lab4.repository.ProductDB;
 
-import java.sql.Connection;
 import java.util.UUID;
 
 public class StartWindowController {

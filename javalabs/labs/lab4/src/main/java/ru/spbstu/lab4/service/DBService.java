@@ -114,7 +114,7 @@ public class DBService {
             if (args.hasNext()) {
                 throw new RuntimeException("Неверное число аргументов.");
             }
-            double price = productDB.getPrice(title);
+            double price = productDB.findProduct(title).getCost();
             System.out.println("цена : " + price);
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Неверная команда.");

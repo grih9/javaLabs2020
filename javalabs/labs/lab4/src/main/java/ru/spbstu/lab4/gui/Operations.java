@@ -6,5 +6,4 @@ public enum Operations {
     DELETE,
     FIND,
     FILTER,
-    SHOW_ALL
 }

@@ -5,6 +5,7 @@ import ru.spbstu.lab4.model.Product;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class ProductDB {
     private final Connection connection;
@@ -32,7 +33,7 @@ public class ProductDB {
             statement.setString(1, title);
 
             if (statement.executeUpdate() == 0) {
-                throw new RuntimeException("Ошибка удаления. Такого товара нет в таблице.");
+                throw new NoSuchElementException("Ошибка удаления. Такого товара нет в таблице.");
             }
         } catch (SQLException e) {
             throw new RuntimeException("SQL ошибка! Не удалось удалить товар", e);
@@ -80,22 +81,23 @@ public class ProductDB {
             statement.setString(2, title);
             statement.setDouble(1, cost);
             if (statement.executeUpdate() == 0) {
-                throw new SQLException();
+                throw new NoSuchElementException();
             }
         } catch (SQLException e) {
             throw new RuntimeException("Такого товара нет");
         }
     }
 
-    public double getPrice(String title) {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT cost FROM products WHERE title = ?")) {
+    public Product findProduct(String title) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM products WHERE title = ?")) {
             statement.setString(1, title);
             ResultSet rs = statement.executeQuery();
             rs.next();
-            return rs.getDouble("cost");
+            return new Product(rs.getInt("id"), rs.getString("prodid"),
+                    rs.getString("title"), rs.getDouble("cost"));
         } catch (SQLException e) {
             System.out.println("Такого товара нет");
-            return -1;
+            return null;
         }
     }
 

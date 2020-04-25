@@ -14,6 +14,8 @@ import ru.spbstu.lab4.model.Product;
 import ru.spbstu.lab4.repository.ProductDB;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 public class MainWindowController {
     private GUIMain gui;
@@ -51,11 +53,9 @@ public class MainWindowController {
         gui.showOK("Все записи на экране.");
     }
 
-
     @FXML
     private void find() {
         showProductWindow(Operations.FIND);
-
     }
 
     @FXML
@@ -83,7 +83,33 @@ public class MainWindowController {
     }
 
     public void executeOperation(Product product, Operations operation, double priceFrom, double priceTo) {
-
+        switch (operation) {
+            case ADD:
+                productDB.add(product);
+                updateTable();
+                break;
+            case EDIT:
+                productDB.changeCost(product.getTitle(), product.getCost());
+                updateTable();
+                break;
+            case DELETE:
+                productDB.removeByTitle(product.getTitle());
+                updateTable();
+                break;
+            case FIND:
+                Product productToFind = productDB.findProduct(product.getTitle());
+                if (productToFind == null) {
+                    throw new NoSuchElementException();
+                }
+                productTable.getItems().clear();
+                productTable.getItems().add(productToFind);
+                break;
+            case FILTER:
+                List<Product> filteredTableList = productDB.getFilteredTableList(priceFrom, priceTo);
+                productTable.getItems().clear();
+                productTable.getItems().addAll(filteredTableList);
+                break;
+        }
         gui.showOK("Операция: " + operation.toString() + " выполнена успешно!");
     }
 
