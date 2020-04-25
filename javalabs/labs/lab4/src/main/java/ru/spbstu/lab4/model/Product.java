@@ -4,18 +4,17 @@ import java.util.Objects;
 
 public class Product {
     private int id;
-    private String prodId;
+    private String prodid;
     private String title;
     private double cost;
 
-//    public Product() {
-//        this(n + 1, n + 1, "товар" + (n + 1), 10);
-//        ++n;
-//    }
+    public Product(int id, String prodid, String title, double cost) {
+        if (cost < 0) {
+            throw new IllegalArgumentException("Цена не может быть отрицательной.");
+        }
 
-    public Product(int id, String prodId, String title, double cost) {
         this.id = id;
-        this.prodId = prodId;
+        this.prodid = prodid;
         this.title = title;
         this.cost = cost;
     }
@@ -24,8 +23,8 @@ public class Product {
         return id;
     }
 
-    public String getProdId() {
-        return prodId;
+    public String getProdid() {
+        return prodid;
     }
 
     public String getTitle() {
@@ -41,7 +40,7 @@ public class Product {
     }
 
     public void setProdId(String prodId) {
-        this.prodId = prodId;
+        this.prodid = prodid;
     }
 
     public void setTitle(String title) {
@@ -62,19 +61,19 @@ public class Product {
         }
         Product product = (Product) o;
         return id == product.id &&
-                prodId.equals(product.prodId) &&
+                prodid.equals(product.prodid) &&
                 title.equals(product.title) &&
                 cost == product.cost;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, prodId, title, cost);
+        return Objects.hash(id, prodid, title, cost);
     }
 
     @Override
     public String toString() {
-        return "id : " + id + ", prodid : " + prodId +
+        return "id : " + id + ", prodid : " + prodid +
                 ", title : " + title + ", cost : " + cost;
     }
 

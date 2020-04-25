@@ -6,10 +6,7 @@ import ru.spbstu.lab4.repository.ProductDB;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.sql.Connection;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class DBService {
@@ -99,7 +96,12 @@ public class DBService {
             if (args.hasNext()) {
                 throw new RuntimeException("Неверное число аргументов.");
             }
-            productDB.printTable();
+            List<Product> products = productDB.getList();
+            while (!products.isEmpty()) {
+                Product product = products.remove(0);
+                out.println(product.getId() + " : " + product.getProdid() +
+                        " : " + product.getTitle() + " : " + product.getCost());
+            }
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Неверная команда.");
         }

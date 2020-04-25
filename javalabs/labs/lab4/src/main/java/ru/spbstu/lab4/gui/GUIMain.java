@@ -84,7 +84,7 @@ public class GUIMain extends Application {
 
             final StartWindowController controller = loader.getController();
             controller.setGUI(this);
-            controller.setConnection(connection);
+            controller.setProductDB(productDB);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -99,6 +99,8 @@ public class GUIMain extends Application {
             final MainWindowController controller = loader.getController();
             controller.setGUI(this);
             controller.setProductDB(productDB);
+            controller.setConnection(connection);
+            controller.updateTable();
         } catch (IOException e) {
             e.printStackTrace();
         }

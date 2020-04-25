@@ -3,6 +3,8 @@ package ru.spbstu.lab4.repository;
 import ru.spbstu.lab4.model.Product;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductDB {
     private final Connection connection;
@@ -15,7 +17,7 @@ public class ProductDB {
 
     public void add(Product product) {
         try (PreparedStatement statement = connection.prepareStatement("INSERT INTO products (prodid, title, cost) VALUES (?, ?, ?)")) {
-            statement.setString(1, product.getProdId());
+            statement.setString(1, product.getProdid());
             statement.setString(2, product.getTitle());
             statement.setDouble(3, product.getCost());
 
@@ -37,7 +39,8 @@ public class ProductDB {
         }
     }
 
-    public void printTable() {
+    public List<Product> getList() {
+        List<Product> list = new ArrayList<>();
         try (Statement statement = connection.createStatement()) {
             ResultSet res = statement.executeQuery("SELECT * FROM products");
             while (res.next()) {
@@ -45,11 +48,12 @@ public class ProductDB {
                 String prodid = res.getString("prodid");
                 String title = res.getString("title");
                 double cost = res.getDouble("cost");
-                System.out.println(id + " : " + prodid + " : " + title + " : " + cost);
+                list.add(new Product(id, prodid, title, cost));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return list;
 
     }
 

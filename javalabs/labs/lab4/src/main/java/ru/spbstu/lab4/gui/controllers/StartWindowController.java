@@ -4,13 +4,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import ru.spbstu.lab4.gui.GUIMain;
+import ru.spbstu.lab4.model.Product;
+import ru.spbstu.lab4.repository.ProductDB;
 
 import java.sql.Connection;
+import java.util.UUID;
 
 public class StartWindowController {
 
     private GUIMain gui;
-    private Connection connection;
+    private ProductDB productDB;
 
     @FXML
     private TextField numGenerate;
@@ -19,6 +22,9 @@ public class StartWindowController {
     private void AcceptButtonClicked(ActionEvent actionEvent) {
         try {
             int number = Integer.parseInt(numGenerate.getText());
+            for (int i = 0; i < number; i++) {
+                productDB.add(new Product(i, UUID.randomUUID().toString(), "товар" + i, i * 10));
+            }
             gui.showOK("Успешно сгенерировано");
             gui.showMainWindow();
         } catch (NumberFormatException e) {
@@ -30,7 +36,7 @@ public class StartWindowController {
         this.gui = gui;
     }
 
-    public void setConnection(Connection connection) {
-        this.connection = connection;
+    public void setProductDB(ProductDB productDB) {
+        this.productDB = productDB;
     }
 }

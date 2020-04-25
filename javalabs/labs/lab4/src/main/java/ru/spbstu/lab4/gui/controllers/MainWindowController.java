@@ -6,8 +6,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ru.spbstu.lab4.gui.GUIMain;
+import ru.spbstu.lab4.gui.Operations;
 import ru.spbstu.lab4.model.Product;
 import ru.spbstu.lab4.repository.ProductDB;
+
+import javax.crypto.spec.OAEPParameterSpec;
+import java.sql.Connection;
+import java.util.ArrayList;
 
 public class MainWindowController {
     private GUIMain gui;
@@ -16,33 +21,37 @@ public class MainWindowController {
     @FXML
     private TableView<Product> productTable;
     @FXML
-    private TableColumn<Product, Integer> id;
+    private TableColumn<?, ?> id;
     @FXML
-    private TableColumn<Product, String> prodid;
+    private TableColumn<?, ?> prodid;
     @FXML
-    private TableColumn<Product, String> title;
+    private TableColumn<?, ?> title;
     @FXML
-    private TableColumn<Product, Double> price;
+    private TableColumn<?, ?> price;
+
+    private Connection connection;
 
     @FXML
     private void add() {
-
+        openProductWindow(Operations.ADD);
     }
 
     @FXML
     private void edit() {
-
+        openProductWindow(Operations.EDIT);
     }
 
     @FXML
     private void delete() {
-
+        openProductWindow(Operations.DELETE);
     }
 
     @FXML
     private void showAll() {
-
+        updateTable();
+        gui.showOK("Все записи на экране.");
     }
+
 
     @FXML
     private void find() {
@@ -52,6 +61,14 @@ public class MainWindowController {
 
     @FXML
     private void filter() {
+
+    }
+
+    public void openProductWindow(Operations operation) {
+
+    }
+
+    public void executeOperation(Product product, Operations operation) {
 
     }
 
@@ -68,9 +85,16 @@ public class MainWindowController {
 
     }
 
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
     public TableView<Product> getProductTable() {
         return productTable;
     }
 
-
+    public void updateTable() {
+        productTable.getItems().clear();
+        boolean f = productTable.getItems().addAll(productDB.getList());
+    }
 }
