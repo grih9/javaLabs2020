@@ -131,7 +131,6 @@ public class ProductWindowController {
         } catch (NoSuchElementException e) {
             gui.showError("Товара с таким именем не найдено.");
         } catch (RuntimeException e) {
-            e.printStackTrace();
             gui.showError("Товар с таким именем уже есть.");
         }
     }

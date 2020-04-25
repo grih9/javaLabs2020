@@ -24,11 +24,6 @@ public class DBService {
             "/filter_by_price", this::filterByPrice
     );
 
-    public DBService() {
-        in = new Scanner(System.in);
-        out = System.out;
-    }
-
     public DBService(InputStream in, PrintStream out, Connection connection) {
         this.in = new Scanner(in);
         this.out = out;
@@ -52,7 +47,7 @@ public class DBService {
                     break;
                 }
                 execute(command + in.nextLine());
-            }  catch (RuntimeException e) {
+            } catch (RuntimeException e) {
                 out.println(e.getMessage());
             }
         }
@@ -69,11 +64,11 @@ public class DBService {
     private void add(Scanner args) {
         try {
             final String title = args.next();
-            final int cost = args.nextInt();
+            final int price = args.nextInt();
             if (args.hasNext()) {
                 throw new RuntimeException("Неверное число аргументов.");
             }
-            productDB.add(new Product(0, UUID.randomUUID().toString(), title, cost));
+            productDB.add(new Product(0, UUID.randomUUID().toString(), title, price));
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Неверная команда.");
         }
@@ -100,8 +95,7 @@ public class DBService {
             List<Product> products = productDB.getTableList();
             while (!products.isEmpty()) {
                 Product product = products.remove(0);
-                out.println(product.getId() + " : " + product.getProdid() +
-                        " : " + product.getTitle() + " : " + product.getCost());
+                out.println(product.toString());
             }
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Неверная команда.");
@@ -114,7 +108,11 @@ public class DBService {
             if (args.hasNext()) {
                 throw new RuntimeException("Неверное число аргументов.");
             }
-            double price = productDB.findProduct(title).getCost();
+            Product product =  productDB.findProduct(title);
+            if (product == null) {
+                throw new RuntimeException("Товар с таким именем не найден.");
+            }
+            double price = product.getPrice();
             System.out.println("цена : " + price);
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Неверная команда.");
@@ -124,11 +122,11 @@ public class DBService {
     private void changePrice(Scanner args) {
         try {
             final String title = args.next();
-            final int cost = args.nextInt();
+            final int price = args.nextInt();
             if (args.hasNext()) {
                 throw new RuntimeException("Неверное число аргументов.");
             }
-            productDB.changeCost(title, cost);
+            productDB.changePrice(title, price);
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Неверная команда.");
         }
@@ -144,8 +142,7 @@ public class DBService {
             List<Product> products = productDB.getFilteredTableList(from, to);
             while (!products.isEmpty()) {
                 Product product = products.remove(0);
-                out.println(product.getId() + " : " + product.getProdid() +
-                        " : " + product.getTitle() + " : " + product.getCost());
+                out.println(product.toString());
             }
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Неверная команда.");

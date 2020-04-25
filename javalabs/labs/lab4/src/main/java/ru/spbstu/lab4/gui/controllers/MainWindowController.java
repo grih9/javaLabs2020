@@ -89,7 +89,7 @@ public class MainWindowController {
                 updateTable();
                 break;
             case EDIT:
-                productDB.changeCost(product.getTitle(), product.getCost());
+                productDB.changePrice(product.getTitle(), product.getPrice());
                 updateTable();
                 break;
             case DELETE:
@@ -99,7 +99,8 @@ public class MainWindowController {
             case FIND:
                 Product productToFind = productDB.findProduct(product.getTitle());
                 if (productToFind == null) {
-                    throw new NoSuchElementException();
+                    System.out.println(11);
+                    throw new NullPointerException();
                 }
                 productTable.getItems().clear();
                 productTable.getItems().add(productToFind);
@@ -122,7 +123,7 @@ public class MainWindowController {
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
         prodid.setCellValueFactory(new PropertyValueFactory<>("prodid"));
         title.setCellValueFactory(new PropertyValueFactory<>("title"));
-        price.setCellValueFactory(new PropertyValueFactory<>("cost"));
+        price.setCellValueFactory(new PropertyValueFactory<>("price"));
     }
 
     public TableView<Product> getProductTable() {

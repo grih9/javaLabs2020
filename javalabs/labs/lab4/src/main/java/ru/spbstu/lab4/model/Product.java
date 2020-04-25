@@ -6,17 +6,17 @@ public class Product {
     private int id;
     private String prodid;
     private String title;
-    private double cost;
+    private double price;
 
-    public Product(int id, String prodid, String title, double cost) {
-        if (cost < 0) {
+    public Product(int id, String prodid, String title, double price) {
+        if (price < 0) {
             throw new IllegalArgumentException("Цена не может быть отрицательной.");
         }
 
         this.id = id;
         this.prodid = prodid;
         this.title = title;
-        this.cost = cost;
+        this.price = price;
     }
 
     public int getId() {
@@ -31,8 +31,8 @@ public class Product {
         return title;
     }
 
-    public double getCost() {
-        return cost;
+    public double getPrice() {
+        return price;
     }
 
     public void setId(int id) {
@@ -47,8 +47,8 @@ public class Product {
         this.title = title;
     }
 
-    public void setCost(double cost) {
-        this.cost = cost;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     @Override
@@ -63,18 +63,18 @@ public class Product {
         return id == product.id &&
                 prodid.equals(product.prodid) &&
                 title.equals(product.title) &&
-                cost == product.cost;
+                price == product.price;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, prodid, title, cost);
+        return Objects.hash(id, prodid, title, price);
     }
 
     @Override
     public String toString() {
-        return "id : " + id + ", prodid : " + prodid +
-                ", title : " + title + ", cost : " + cost;
+        return id + " : " + prodid +
+                ": " + title + ": " + price;
     }
 
 }
