@@ -100,7 +100,6 @@ public class GUIMain extends Application {
             final MainWindowController controller = loader.getController();
             controller.setGUI(this);
             controller.setProductDB(productDB);
-            controller.setConnection(connection);
             controller.updateTable();
         } catch (IOException e) {
             e.printStackTrace();

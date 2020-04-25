@@ -21,7 +21,10 @@ public class StartWindowController {
     @FXML
     private void AcceptButtonClicked(ActionEvent actionEvent) {
         try {
-            int number = Integer.parseInt(numGenerate.getText());
+            int number = 0;
+            if (!numGenerate.getText().trim().isEmpty()) {
+                number = Integer.parseInt(numGenerate.getText().trim());
+            }
             for (int i = 0; i < number; i++) {
                 productDB.add(new Product(i, UUID.randomUUID().toString(), "товар" + i, i * 10));
             }

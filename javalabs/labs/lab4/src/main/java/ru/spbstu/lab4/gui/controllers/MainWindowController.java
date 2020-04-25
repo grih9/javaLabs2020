@@ -1,6 +1,5 @@
 package ru.spbstu.lab4.gui.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -14,10 +13,7 @@ import ru.spbstu.lab4.gui.Operations;
 import ru.spbstu.lab4.model.Product;
 import ru.spbstu.lab4.repository.ProductDB;
 
-import javax.crypto.spec.OAEPParameterSpec;
 import java.io.IOException;
-import java.sql.Connection;
-import java.util.ArrayList;
 
 public class MainWindowController {
     private GUIMain gui;
@@ -33,8 +29,6 @@ public class MainWindowController {
     private TableColumn<Product, String> title;
     @FXML
     private TableColumn<Product, Double> price;
-
-    private Connection connection;
 
     @FXML
     private void add() {
@@ -61,7 +55,6 @@ public class MainWindowController {
     @FXML
     private void find() {
         showProductWindow(Operations.FIND);
-        //Product newProduct = productDB.printCost(product.getTitle());
 
     }
 
@@ -83,13 +76,15 @@ public class MainWindowController {
 
             final ProductWindowController controller = loader.getController();
             controller.setParentDetails(this, operation);
+            controller.setGUI(gui);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void executeOperation(Product product, Operations operation) {
+    public void executeOperation(Product product, Operations operation, double priceFrom, double priceTo) {
 
+        gui.showOK("Операция: " + operation.toString() + " выполнена успешно!");
     }
 
     public void setProductDB(ProductDB productDB) {
@@ -102,11 +97,6 @@ public class MainWindowController {
         prodid.setCellValueFactory(new PropertyValueFactory<>("prodid"));
         title.setCellValueFactory(new PropertyValueFactory<>("title"));
         price.setCellValueFactory(new PropertyValueFactory<>("cost"));
-
-    }
-
-    public void setConnection(Connection connection) {
-        this.connection = connection;
     }
 
     public TableView<Product> getProductTable() {
@@ -115,6 +105,6 @@ public class MainWindowController {
 
     public void updateTable() {
         productTable.getItems().clear();
-        boolean f = productTable.getItems().addAll(productDB.getTableList());
+        productTable.getItems().addAll(productDB.getTableList());
     }
 }

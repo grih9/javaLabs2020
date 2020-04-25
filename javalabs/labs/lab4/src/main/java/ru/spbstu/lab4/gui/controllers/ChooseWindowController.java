@@ -15,6 +15,7 @@ public class ChooseWindowController {
     private RadioButton graphic;
     @FXML
     private RadioButton console;
+
     private GUIMain gui;
     private Connection connection;
 
