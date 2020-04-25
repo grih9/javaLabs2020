@@ -67,6 +67,7 @@ public class GUIMain extends Application {
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("/ChooseWindow.fxml"));
             window.setScene(new Scene(loader.load()));
             window.setTitle("Выбор режима");
+            window.setResizable(false);
 
             final ChooseWindowController controller = loader.getController();
             controller.setGUI(this);

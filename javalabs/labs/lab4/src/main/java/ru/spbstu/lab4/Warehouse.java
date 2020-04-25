@@ -1,6 +1,5 @@
 package ru.spbstu.lab4;
 
-import ru.spbstu.lab4.gui.GUI;
 import ru.spbstu.lab4.service.DBService;
 
 import java.sql.*;
@@ -23,8 +22,6 @@ public class Warehouse {
 
     public static void main(String[] args) {
         try {
-            GUI app = new GUI();
-            app.setVisible(true);
             Class.forName(DB_DRIVER);
             System.out.println("Соединяемся с БД...");
             Connection connection = getConnection();

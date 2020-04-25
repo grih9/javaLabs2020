@@ -52,7 +52,7 @@ public class ProductWindowController {
                 priceLabel.setVisible(false);
                 break;
             case FIND:
-                typeOperLabel.setText("ИЗМЕНЕНИЕ ПРОДУКТА");
+                typeOperLabel.setText("ПОИСК ПРОДУКТА");
                 titleText.setEditable(true);
                 priceText.setVisible(false);
                 priceLabel.setVisible(false);
@@ -66,13 +66,15 @@ public class ProductWindowController {
                 toLabel.setVisible(true);
                 toText.setVisible(true);
                 fromLabel.setVisible(true);
-                fromLabel.setVisible(true);
+                fromText.setVisible(true);
                 break;
         }
     }
 
     @FXML
     private void clickOnButtonEvent(ActionEvent actionEvent) {
+
+        //parent.executeOperation(operation);
 
     }
 }

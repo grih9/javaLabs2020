@@ -39,7 +39,7 @@ public class ProductDB {
         }
     }
 
-    public List<Product> getList() {
+    public List<Product> getTableList() {
         List<Product> list = new ArrayList<>();
         try (Statement statement = connection.createStatement()) {
             ResultSet res = statement.executeQuery("SELECT * FROM products");
@@ -54,10 +54,10 @@ public class ProductDB {
             e.printStackTrace();
         }
         return list;
-
     }
 
-    public void printFilteredTable(double from, double to) {
+    public List<Product> getFilteredTableList(double from, double to) {
+        List<Product> products = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM products WHERE cost >= ? and cost <= ?")) {
             statement.setDouble(1, from);
             statement.setDouble(2, to);
@@ -67,11 +67,12 @@ public class ProductDB {
                 String prodid = rs.getString("prodid");
                 String title = rs.getString("title");
                 double cost = rs.getDouble("cost");
-                System.out.println(id + " : " + prodid + " : " + title + " : " + cost);
+                products.add(new Product(id, prodid, title, cost));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return products;
     }
 
     public void changeCost(String title, double cost) {
@@ -86,14 +87,15 @@ public class ProductDB {
         }
     }
 
-    public void printCost(String title) {
+    public double getPrice(String title) {
         try (PreparedStatement statement = connection.prepareStatement("SELECT cost FROM products WHERE title = ?")) {
             statement.setString(1, title);
             ResultSet rs = statement.executeQuery();
             rs.next();
-            System.out.println("цена : " + rs.getDouble("cost"));
+            return rs.getDouble("cost");
         } catch (SQLException e) {
             System.out.println("Такого товара нет");
+            return -1;
         }
     }
 

@@ -96,7 +96,8 @@ public class DBService {
             if (args.hasNext()) {
                 throw new RuntimeException("Неверное число аргументов.");
             }
-            List<Product> products = productDB.getList();
+
+            List<Product> products = productDB.getTableList();
             while (!products.isEmpty()) {
                 Product product = products.remove(0);
                 out.println(product.getId() + " : " + product.getProdid() +
@@ -113,7 +114,8 @@ public class DBService {
             if (args.hasNext()) {
                 throw new RuntimeException("Неверное число аргументов.");
             }
-            productDB.printCost(title);
+            double price = productDB.getPrice(title);
+            System.out.println("цена : " + price);
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Неверная команда.");
         }
@@ -139,7 +141,12 @@ public class DBService {
             if (args.hasNext()) {
                 throw new RuntimeException("Неверное число аргументов.");
             }
-            productDB.printFilteredTable(from, to);
+            List<Product> products = productDB.getFilteredTableList(from, to);
+            while (!products.isEmpty()) {
+                Product product = products.remove(0);
+                out.println(product.getId() + " : " + product.getProdid() +
+                        " : " + product.getTitle() + " : " + product.getCost());
+            }
         } catch (NoSuchElementException e) {
             throw new RuntimeException("Неверная команда.");
         }
